@@ -7,7 +7,7 @@ var Editor = function() {
 
   var replace = function(target, replacement) {
     _fragments.forEach( function(fragment, index, fragments) {
-      _fragments[index] = fragment.replace(target, replacement)
+      _fragments[index] = fragment.replace(RegExp(target, 'g'), replacement)
     })
   }
 
