@@ -43,6 +43,8 @@ var Editor = function() {
       var original = operation.args[0]
       var replacement = operation.args[1]
       _replace(original, replacement)
+    } else {
+      throw 'Redo: Unknown operation ' + operation.called
     }
   }
 
@@ -68,6 +70,8 @@ var Editor = function() {
       var original = operation.args[0]
       var replacement = operation.args[1]
       _replace(replacement, original)
+    } else {
+      throw 'Undo: Unknown operation: ' + operation.called
     }
   }
 
