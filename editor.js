@@ -27,8 +27,13 @@ var Editor = function() {
     _commands.push('add', arguments)
   }
 
-  var replace = function(target, replacement) {
+  var _replace = function(target, replacement) {
     _text = _text.replace(RegExp(target, 'g'), replacement)
+  }
+
+  var replace = function(target, replacement) {
+    _replace(target, replacement)
+    _commands.push('replace', arguments)
   }
 
   var toString = function() {
@@ -40,6 +45,10 @@ var Editor = function() {
     if ( operation.called === 'add' ) {
       var fragment = operation.args[0]
       _text = _text.slice(0, -(fragment.length))
+    } else if ( operation.called === 'replace' ) {
+      var original = operation.args[0]
+      var replacement = operation.args[1]
+      _replace(replacement, original)
     }
   }
 
