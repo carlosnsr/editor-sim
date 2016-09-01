@@ -29,19 +29,17 @@ var Editor = function() {
   var _commands = function() {
     var _history = []
     var _undone = []
-    const NULL_OBJECT = {
-      redo: function() {},
-      undo: function() {}
-    }
 
     var push = function(redo_fn, undo_fn) {
       _undone = []  // a new operation invalidates the previous history of undo's
-      _history.push(
-        {
-          redo: redo_fn,
-          undo: undo_fn
-        }
-      )
+      _history.push( _make_command(redo_fn, undo_fn) )
+    }
+
+    var _make_command = function(redo_fn, undo_fn) {
+      return {
+        redo: redo_fn,
+        undo: undo_fn
+      }
     }
 
     var redo = function() {
@@ -52,6 +50,7 @@ var Editor = function() {
       return _move_last_operation(_history, _undone)
     }
 
+    const NULL_OBJECT = _make_command(function() {}, function() {})
     var _move_last_operation = function(old_list, target_list) {
       var operation = old_list.pop() || NULL_OBJECT
       if ( !(operation === NULL_OBJECT) ) {
