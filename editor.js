@@ -74,15 +74,18 @@ var Editor = function() {
       return
     }
 
-    if ( operation.called === 'add' ) {
-      var fragment = operation.args[0]
-      _text.add(fragment)
-    } else if ( operation.called === 'replace' ) {
-      var original = operation.args[0]
-      var replacement = operation.args[1]
-      _text.replace(original, replacement)
-    } else {
-      throw 'Redo: Unknown operation ' + operation.called
+    switch(operation.called) {
+      case 'add':
+        var fragment = operation.args[0]
+        _text.add(fragment)
+        break;
+      case 'replace':
+        var original = operation.args[0]
+        var replacement = operation.args[1]
+        _text.replace(original, replacement)
+        break;
+      default:
+        throw 'Redo: Unknown operation ' + operation.called
     }
   }
 
@@ -101,15 +104,18 @@ var Editor = function() {
       return
     }
 
-    if ( operation.called === 'add' ) {
-      var fragment = operation.args[0]
-      _text.truncate(fragment)
-    } else if ( operation.called === 'replace' ) {
-      var original = operation.args[0]
-      var replacement = operation.args[1]
-      _text.replace(replacement, original)
-    } else {
-      throw 'Undo: Unknown operation: ' + operation.called
+    switch(operation.called) {
+      case 'add':
+        var fragment = operation.args[0]
+        _text.truncate(fragment)
+        break;
+      case 'replace':
+        var original = operation.args[0]
+        var replacement = operation.args[1]
+        _text.replace(replacement, original)
+        break;
+      default:
+        throw 'Undo: Unknown operation: ' + operation.called
     }
   }
 
