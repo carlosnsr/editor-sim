@@ -40,6 +40,10 @@ var Editor = function() {
 
   var redo = function() {
     var operation = _commands.redo()
+    if ( !operation ) {
+      return
+    }
+
     if ( operation.called === 'replace' ) {
       var original = operation.args[0]
       var replacement = operation.args[1]
@@ -64,6 +68,10 @@ var Editor = function() {
 
   var undo = function() {
     var operation = _commands.undo()
+    if ( !operation ) {
+      return
+    }
+
     if ( operation.called === 'add' ) {
       var fragment = operation.args[0]
       _text = _text.slice(0, -(fragment.length))
