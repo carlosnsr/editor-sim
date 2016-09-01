@@ -6,6 +6,10 @@ var Editor = function() {
       _text += text
     }
 
+    var truncate = function(fragment) {
+      _text = _text.slice(0, -(fragment.length))
+    }
+
     var replace = function(target, replacement) {
       _text = _text.replace(RegExp(target, 'g'), replacement)
     }
@@ -17,7 +21,8 @@ var Editor = function() {
     return {
       add: add,
       replace: replace,
-      toString: toString
+      toString: toString,
+      truncate: truncate
     }
   }()
 
@@ -98,7 +103,7 @@ var Editor = function() {
 
     if ( operation.called === 'add' ) {
       var fragment = operation.args[0]
-      _text = _text.slice(0, -(fragment.length))
+      _text.truncate(fragment)
     } else if ( operation.called === 'replace' ) {
       var original = operation.args[0]
       var replacement = operation.args[1]
