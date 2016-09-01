@@ -30,12 +30,13 @@ var Editor = function() {
     var _history = []
     var _undone = []
 
-    var push = function(called, args) {
+    var push = function(called, args, undo_fn) {
       _undone = []  // a new operation invalidates the previous history of undo's
       _history.push(
         {
           called: called,
-          args: args
+          args: args,
+          undo: undo_fn
         }
       )
     }
@@ -65,7 +66,11 @@ var Editor = function() {
 
   var add = function(text) {
     _text.add(text)
-    _commands.push('add', arguments)
+    _commands.push('add', arguments,
+      function() {
+        _text.truncate(text)
+      }
+    )
   }
 
   var redo = function() {
@@ -91,7 +96,11 @@ var Editor = function() {
 
   var replace = function(target, replacement) {
     _text.replace(target, replacement)
-    _commands.push('replace', arguments)
+    _commands.push('replace', arguments,
+      function() {
+        _text.replace(replacement, target)
+      }
+    )
   }
 
   var toString = function() {
@@ -106,13 +115,8 @@ var Editor = function() {
 
     switch(operation.called) {
       case 'add':
-        var fragment = operation.args[0]
-        _text.truncate(fragment)
-        break;
       case 'replace':
-        var original = operation.args[0]
-        var replacement = operation.args[1]
-        _text.replace(replacement, original)
+        operation.undo()
         break;
       default:
         throw 'Undo: Unknown operation: ' + operation.called
