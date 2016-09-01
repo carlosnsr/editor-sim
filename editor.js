@@ -14,7 +14,9 @@ var Editor = function() {
     }
 
     var redo = function() {
-      return _undone.pop()
+      var redone = _undone.pop()
+      _history.push(redone)
+      return redone
     }
 
     var undo = function() {
@@ -100,4 +102,7 @@ editor.undo()
 console.log(editor.toString())
 
 editor.redo()
+console.log(editor.toString())
+
+editor.undo()
 console.log(editor.toString())
