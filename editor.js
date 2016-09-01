@@ -41,19 +41,19 @@ var Editor = function() {
     }
 
     var redo = function() {
-      var redone = _undone.pop()
-      if ( redone ) {
-        _history.push(redone)
-      }
-      return redone
+      return _move_last_operation(_undone, _history)
     }
 
     var undo = function() {
-      var undone = _history.pop()
-      if ( undone ) {
-        _undone.push(undone)
+      return _move_last_operation(_history, _undone)
+    }
+
+    var _move_last_operation = function(old_list, target_list) {
+      var operation = old_list.pop()
+      if (operation) {
+        target_list.push(operation)
       }
-      return undone
+      return operation
     }
 
     return {
