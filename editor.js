@@ -2,6 +2,7 @@ var Editor = function() {
   var _text = ''
   var _commands = function() {
     var _history = []
+    var _undone = []
 
     var push = function(called, args) {
       _history.push(
@@ -12,12 +13,19 @@ var Editor = function() {
       )
     }
 
+    var redo = function() {
+      return _undone.pop()
+    }
+
     var undo = function() {
-      return _history.pop()
+      var undone = _history.pop()
+      _undone.push(undone)
+      return undone
     }
 
     return {
       push: push,
+      redo: redo,
       undo: undo
     }
   }()
@@ -25,6 +33,15 @@ var Editor = function() {
   var add = function(text) {
     _text += text
     _commands.push('add', arguments)
+  }
+
+  var redo = function() {
+    var operation = _commands.redo()
+    if ( operation.called === 'replace' ) {
+      var original = operation.args[0]
+      var replacement = operation.args[1]
+      _replace(original, replacement)
+    }
   }
 
   var _replace = function(target, replacement) {
@@ -54,6 +71,7 @@ var Editor = function() {
 
   return {
     add: add,
+    redo: redo,
     replace: replace,
     toString: toString,
     undo: undo
@@ -79,4 +97,7 @@ editor.replace('foo', 'bar')
 console.log(editor.toString())
 
 editor.undo()
+console.log(editor.toString())
+
+editor.redo()
 console.log(editor.toString())
