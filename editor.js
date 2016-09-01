@@ -5,6 +5,7 @@ var Editor = function() {
     var _undone = []
 
     var push = function(called, args) {
+      _undone = []  // a new operation invalidates the previous history of undo's
       _history.push(
         {
           called: called,
@@ -109,4 +110,10 @@ editor.redo()
 console.log(editor.toString())
 
 editor.undo()
+console.log(editor.toString())
+
+editor.redo()
+console.log(editor.toString())
+
+editor.redo()
 console.log(editor.toString())
