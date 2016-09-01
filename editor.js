@@ -1,5 +1,26 @@
 var Editor = function() {
-  var _text = ''
+  var _text = function() {
+    var _text = ''
+
+    var add = function(text) {
+      _text += text
+    }
+
+    var replace = function(target, replacement) {
+      _text = _text.replace(RegExp(target, 'g'), replacement)
+    }
+
+    var toString = function() {
+      return _text
+    }
+
+    return {
+      add: add,
+      replace: replace,
+      toString: toString
+    }
+  }()
+
   var _commands = function() {
     var _history = []
     var _undone = []
@@ -37,12 +58,8 @@ var Editor = function() {
     }
   }()
 
-  var _add = function(text) {
-    _text += text
-  }
-
   var add = function(text) {
-    _add(text)
+    _text.add(text)
     _commands.push('add', arguments)
   }
 
@@ -54,27 +71,23 @@ var Editor = function() {
 
     if ( operation.called === 'add' ) {
       var fragment = operation.args[0]
-      _add(fragment)
+      _text.add(fragment)
     } else if ( operation.called === 'replace' ) {
       var original = operation.args[0]
       var replacement = operation.args[1]
-      _replace(original, replacement)
+      _text.replace(original, replacement)
     } else {
       throw 'Redo: Unknown operation ' + operation.called
     }
   }
 
-  var _replace = function(target, replacement) {
-    _text = _text.replace(RegExp(target, 'g'), replacement)
-  }
-
   var replace = function(target, replacement) {
-    _replace(target, replacement)
+    _text.replace(target, replacement)
     _commands.push('replace', arguments)
   }
 
   var toString = function() {
-    return _text
+    return _text.toString()
   }
 
   var undo = function() {
@@ -89,7 +102,7 @@ var Editor = function() {
     } else if ( operation.called === 'replace' ) {
       var original = operation.args[0]
       var replacement = operation.args[1]
-      _replace(replacement, original)
+      _text.replace(replacement, original)
     } else {
       throw 'Undo: Unknown operation: ' + operation.called
     }
