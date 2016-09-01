@@ -30,12 +30,13 @@ var Editor = function() {
     var _history = []
     var _undone = []
 
-    var push = function(called, args, undo_fn) {
+    var push = function(called, args, redo_fn, undo_fn) {
       _undone = []  // a new operation invalidates the previous history of undo's
       _history.push(
         {
           called: called,
           args: args,
+          redo: redo_fn,
           undo: undo_fn
         }
       )
@@ -68,6 +69,9 @@ var Editor = function() {
     _text.add(text)
     _commands.push('add', arguments,
       function() {
+        _text.add(text)
+      },
+      function() {
         _text.truncate(text)
       }
     )
@@ -81,13 +85,8 @@ var Editor = function() {
 
     switch(operation.called) {
       case 'add':
-        var fragment = operation.args[0]
-        _text.add(fragment)
-        break;
       case 'replace':
-        var original = operation.args[0]
-        var replacement = operation.args[1]
-        _text.replace(original, replacement)
+        operation.redo()
         break;
       default:
         throw 'Redo: Unknown operation ' + operation.called
@@ -97,6 +96,9 @@ var Editor = function() {
   var replace = function(target, replacement) {
     _text.replace(target, replacement)
     _commands.push('replace', arguments,
+      function() {
+        _text.replace(target, replacement)
+      },
       function() {
         _text.replace(replacement, target)
       }
