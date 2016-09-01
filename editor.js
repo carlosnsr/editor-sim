@@ -37,8 +37,12 @@ var Editor = function() {
     }
   }()
 
-  var add = function(text) {
+  var _add = function(text) {
     _text += text
+  }
+
+  var add = function(text) {
+    _add(text)
     _commands.push('add', arguments)
   }
 
@@ -48,7 +52,10 @@ var Editor = function() {
       return
     }
 
-    if ( operation.called === 'replace' ) {
+    if ( operation.called === 'add' ) {
+      var fragment = operation.args[0]
+      _add(fragment)
+    } else if ( operation.called === 'replace' ) {
       var original = operation.args[0]
       var replacement = operation.args[1]
       _replace(original, replacement)
@@ -125,7 +132,18 @@ editor.undo()
 console.log(editor.toString())
 
 editor.redo()
+editor.redo()
 console.log(editor.toString())
 
+editor.undo()
+editor.undo()
+editor.undo()
+editor.undo()
+editor.undo()
+console.log(editor.toString())
+
+editor.redo()
+editor.redo()
+editor.redo()
 editor.redo()
 console.log(editor.toString())
