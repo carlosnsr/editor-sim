@@ -1,70 +1,9 @@
+var CommandList = require('./commands.js')
+var TextArea = require('./text_area.js')
+
 var Editor = function() {
-  var _text = function() {
-    var _text = ''
-
-    var add = function(text) {
-      _text += text
-    }
-
-    var truncate = function(fragment) {
-      _text = _text.slice(0, -(fragment.length))
-    }
-
-    var replace = function(target, replacement) {
-      _text = _text.replace(RegExp(target, 'g'), replacement)
-    }
-
-    var toString = function() {
-      return _text
-    }
-
-    return {
-      add: add,
-      replace: replace,
-      toString: toString,
-      truncate: truncate
-    }
-  }()
-
-  var _commands = function() {
-    var _history = []
-    var _undone = []
-
-    var push = function(redo_fn, undo_fn) {
-      _undone = []  // a new operation invalidates the previous history of undo's
-      _history.push( _make_command(redo_fn, undo_fn) )
-    }
-
-    var _make_command = function(redo_fn, undo_fn) {
-      return {
-        redo: redo_fn,
-        undo: undo_fn
-      }
-    }
-
-    var redo = function() {
-      return _move_last_operation(_undone, _history)
-    }
-
-    var undo = function() {
-      return _move_last_operation(_history, _undone)
-    }
-
-    const NULL_OBJECT = _make_command(function() {}, function() {})
-    var _move_last_operation = function(old_list, target_list) {
-      var operation = old_list.pop() || NULL_OBJECT
-      if ( !(operation === NULL_OBJECT) ) {
-        target_list.push(operation)
-      }
-      return operation
-    }
-
-    return {
-      push: push,
-      redo: redo,
-      undo: undo
-    }
-  }()
+  var _text = new TextArea()
+  var _commands = new CommandList()
 
   var add = function(text) {
     _text.add(text)
