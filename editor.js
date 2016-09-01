@@ -16,13 +16,17 @@ var Editor = function() {
 
     var redo = function() {
       var redone = _undone.pop()
-      _history.push(redone)
+      if ( redone ) {
+        _history.push(redone)
+      }
       return redone
     }
 
     var undo = function() {
       var undone = _history.pop()
-      _undone.push(undone)
+      if ( undone ) {
+        _undone.push(undone)
+      }
       return undone
     }
 
