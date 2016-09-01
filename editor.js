@@ -5,6 +5,12 @@ var Editor = function() {
     _fragments.push(fragment)
   }
 
+  var replace = function(target, replacement) {
+    _fragments.forEach( function(fragment, index, fragments) {
+      _fragments[index] = fragment.replace(target, replacement)
+    })
+  }
+
   var toString = function() {
     return _fragments.join('')
   }
@@ -15,6 +21,7 @@ var Editor = function() {
 
   return {
     add: add,
+    replace: replace,
     toString: toString,
     undo: undo
   }
@@ -31,4 +38,9 @@ editor.add(' stranger')
 console.log(editor.toString())
 
 editor.undo()
+console.log(editor.toString())
+
+editor.add(' foo the foo-gical dragon')
+console.log(editor.toString())
+editor.replace('foo', 'bar')
 console.log(editor.toString())
