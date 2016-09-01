@@ -30,12 +30,11 @@ var Editor = function() {
     var _history = []
     var _undone = []
 
-    var push = function(called, args, redo_fn, undo_fn) {
+    var push = function(called, redo_fn, undo_fn) {
       _undone = []  // a new operation invalidates the previous history of undo's
       _history.push(
         {
           called: called,
-          args: args,
           redo: redo_fn,
           undo: undo_fn
         }
@@ -67,7 +66,7 @@ var Editor = function() {
 
   var add = function(text) {
     _text.add(text)
-    _commands.push('add', arguments,
+    _commands.push('add',
       function() {
         _text.add(text)
       },
@@ -95,7 +94,7 @@ var Editor = function() {
 
   var replace = function(target, replacement) {
     _text.replace(target, replacement)
-    _commands.push('replace', arguments,
+    _commands.push('replace',
       function() {
         _text.replace(target, replacement)
       },
