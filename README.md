@@ -10,11 +10,25 @@ The task was to write a little "editor" that one can:
 - undo previous operations
 - redo previously undone operations (i.e. undo undo's)
 
+## Install and Run
+
+```
+   git clone git@github.com:carlosnsr/editor-sim.git
+   cd editor-sim
+   node main.js
+```
+
+## Where to start?
+
+- [editor.js](editor.js): The main object that mimicks an editor
+  - [text_area.js](text_area.js): The object that manages the text in the editor
+  - [commands.js](commands.js): The object that manages the list of undo/redo commands
+
 ## Demonstrated Skills
 
 - JavaScript
-- Refactoring
 - Object-oriented design and programming
+    - Refactoring
     - Design patterns
         - [Command][Command Pattern]
         - [Null Object][Null Object Pattern]
@@ -37,11 +51,11 @@ I refined the solution via:
     - moved the text buffer into its own `TextArea` object
         - this simplified the `Editor`.  `Editor` is now only responsible for executing  operations
         - `TextArea` is now clearly only code to do with managing/modifying the text
-        - `TextArea` can now be included in other code, thus is reusable 
+        - `TextArea` can be reused in other code
     - moved the history of undo's/redo's into its own `CommandList` object
         - this simplified the `Editor` further
         - code for how to create and manage undo's and redo's is now only in `CommandList` 
-        - `CommandList` can now be included in other code, thus is reusable 
+        - `CommandList` can be reused in other code
 
 [Command Pattern]: https://sourcemaking.com/design_patterns/command
 [Null Object Pattern]: https://sourcemaking.com/design_patterns/null_object
